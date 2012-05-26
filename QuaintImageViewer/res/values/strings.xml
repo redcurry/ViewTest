@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QuaintImageViewer</string>
+    <string name="menu_open_text">open</string>
+    <string name="menu_view_zoom_text">view/zoom</string>
+    <string name="menu_fit_to_window_text">fit to window</string>
+    <string name="menu_fit_width_to_window_text">fit width to window</string>
+    <string name="menu_fit_height_to_window_text">fit height to window</string>
+    <string name="menu_zoom_in_text">zoom in</string>
+    <string name="menu_zoom_out_text">zoom out</string>
+    <string name="menu_actual_size_text">actual size</string>
+    <string name="pref_cat_display_text">display</string>
+    <string name="pref_list_fit_text">default image fit to screen</string>
+    <string name="pref_list_fit_summary_text">change how new images should be fit to the screen</string>
+    <string name="pref_list_fit_dialog_text">choose a fit option</string>
+    <string name="menu_settings_text">settings</string>
+    <string name="pref_text">settings</string>
+    <string name="pref_list_fit_default_value">actual size</string>
+    <string name="pref_list_fit_selected_option">pref_list_fit_selected_option</string>
+    <string name="pref_center_option">pref_center_option</string>
+    <string name="pref_center_text">center image when small</string>
+    <string name="pref_center_summary">keep image centered when it\'s smaller than the screen</string>
+    <string name="pref_antialias_option">pref_antialias_option</string>
+    <string name="pref_antialias_text">antialiasing</string>
+    <string name="pref_antialias_summary">interpolate (smooth) image pixels when zooming</string>
+    <string name="menu_color_text">color</string>
+    <string name="menu_grayscale_text">convert to grayscale</string>
+    <string name="menu_invert_text">invert colors (negative)</string>
+    <string name="save_as_overwrite_text">overwrite file</string>
+    <string name="save_as_format_text">file format:</string>
+    <string name="save_as_jpeg_radio_text">jpeg</string>
+    <string name="save_as_png_radio_text">png</string>
+    <string name="save_as_file_name_text">file name:</string>
+    <string name="save_as_extension_text">handle file extension</string>
+    <string name="save_as_quality_text">jpeg quality: </string>
+    <string name="save_as_quality_default">95</string>
+    <string name="save_as_file_name_hint">type in the name of the file</string>
+    <string name="menu_save_as_text">save as...</string>
+    <string name="save_as_title">save as...</string>
+    <string name="color_correction_text">color correction</string>
+    <string name="menu_color_correction_text">color correction</string>
+    <string name="brightness_contrast_gamma_title">brightness/contrast/gamma</string>
+
+</resources>

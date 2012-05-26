@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/pref_cat_display_text">
+		<ListPreference android:dialogTitle="@string/pref_list_fit_dialog_text"
+			android:title="@string/pref_list_fit_text" android:summary="@string/pref_list_fit_summary_text"
+			android:entries="@array/fit_options" android:entryValues="@array/fit_options"
+			android:defaultValue="@string/pref_list_fit_default_value"
+			android:key="@string/pref_list_fit_selected_option" />
+		<CheckBoxPreference android:key="@string/pref_center_option"
+			android:title="@string/pref_center_text" android:summary="@string/pref_center_summary" />
+		<CheckBoxPreference android:summary="@string/pref_antialias_summary" android:title="@string/pref_antialias_text" android:key="@string/pref_antialias_option"/>
+	</PreferenceCategory>
+
+
+</PreferenceScreen>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_open" android:title="@string/menu_open_text"></item><item android:id="@+id/menu_save_as" android:title="@string/menu_save_as_text"></item>
+    <item android:id="@+id/menu_view_zoom" android:title="@string/menu_view_zoom_text">
+        <menu>
+            <item android:id="@+id/menu_actual_size" android:title="@string/menu_actual_size_text"/><item android:id="@+id/menu_zoom_in" android:title="@string/menu_zoom_in_text" /><item android:id="@+id/menu_zoom_out" android:title="@string/menu_zoom_out_text" /><item android:id="@+id/menu_fit_to_window" android:title="@string/menu_fit_to_window_text"/>
+            <item android:id="@+id/menu_fit_width_to_window" android:title="@string/menu_fit_width_to_window_text"/>
+            <item android:id="@+id/menu_fit_height_to_window" android:title="@string/menu_fit_height_to_window_text"/>
+            
+            
+            
+        </menu>
+    </item>
+    
+    <item android:id="@+id/menu_color" android:title="@string/menu_color_text">
+        <menu>
+            <item android:id="@+id/menu_grayscale" android:title="@string/menu_grayscale_text"/>
+            <item android:id="@+id/menu_invert" android:title="@string/menu_invert_text"/>
+            <item android:id="@+id/menu_color_correction" android:title="@string/menu_color_correction_text"/>
+        </menu>
+    </item><item android:id="@+id/menu_settings" android:title="@string/menu_settings_text"></item>
+    
+    
+
+</menu>

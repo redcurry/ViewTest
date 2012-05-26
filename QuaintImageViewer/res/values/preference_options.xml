@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fit_options">
+        <item>actual size</item>
+        <item>fit to screen</item>
+        <item>fit to screen if image is large</item>
+        <item>fit width to screen</item>
+        <item>fit height to screen</item>
+    </string-array>
+</resources>
