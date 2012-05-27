@@ -3,10 +3,9 @@ package com.quaintsoft.imageviewer.color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 
-public class InvertColors extends AbstractColorChanger {
+public class InvertColors extends BitmapColorChangerByColorFilter {
 	
-	@Override
-	protected ColorMatrixColorFilter createColorFilter() {
+	public ColorMatrixColorFilter colorFilter() {
 		float invert [] = { 
 			-1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
 			 0.0f, -1.0f,  0.0f, 1.0f, 0.0f,

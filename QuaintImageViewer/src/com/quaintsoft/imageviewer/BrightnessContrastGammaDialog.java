@@ -18,7 +18,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.quaintsoft.imageviewer.color.Brightness;
 import com.quaintsoft.imageviewer.color.BrightnessContrast;
 import com.quaintsoft.imageviewer.color.Gamma;
 
@@ -88,9 +87,10 @@ public class BrightnessContrastGammaDialog extends AlertDialog
 	private void updatePreview() {
 		brightnessContrast.setBrightness(getBrightness());
 		brightnessContrast.setContrast(getContrast());
-		brightnessContrast.apply(originalPreviewBitmap, currentPreviewBitmap);
+		currentPreviewBitmap = originalPreviewBitmap.copy(Config.ARGB_8888, true);
+		brightnessContrast.apply(currentPreviewBitmap);
 		gamma.setGamma(getGamma());
-		gamma.apply(currentPreviewBitmap, currentPreviewBitmap);
+		gamma.apply(currentPreviewBitmap);
 		getPreview().setImageBitmap(currentPreviewBitmap);
 	}
 

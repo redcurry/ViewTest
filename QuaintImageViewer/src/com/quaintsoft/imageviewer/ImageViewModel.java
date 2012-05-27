@@ -1,12 +1,13 @@
 package com.quaintsoft.imageviewer;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Bitmap.Config;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView.ScaleType;
 
@@ -55,23 +56,18 @@ public class ImageViewModel {
 	}
 	
 	public void setImageBitmap(Bitmap imageBitmap) {
+		MutableBitmapConverter mutableConverter = new MutableBitmapConverter();
+		imageBitmap = mutableConverter.convertToMutable(imageBitmap);
 		imageView.setImageBitmap(imageBitmap);
 		invalidate();
 	}
 	
 	public void setImageURI(Uri data) {
 		imageView.setImageURI(data);
-//		setImageBitmap(copyBitmap(getImageBitmap()));  // Fixes weird density-independent problems
-//		invalidate();
+		setImageBitmap(getImageBitmap());  // Make it mutable
+		invalidate();
 	}
 	
-	private Bitmap copyBitmap(Bitmap bmp) {
-		Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Config.ARGB_8888);
-		Canvas canvas = new Canvas(newBmp);
-		canvas.drawBitmap(bmp, new Matrix(), null);
-		return newBmp;
-	}
-
 	public int getImageWidth() {
 		Drawable drawable = imageView.getDrawable();
 		if (drawable != null)

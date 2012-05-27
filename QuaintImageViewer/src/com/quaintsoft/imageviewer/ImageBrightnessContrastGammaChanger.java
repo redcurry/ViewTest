@@ -2,7 +2,6 @@ package com.quaintsoft.imageviewer;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 
 import com.quaintsoft.imageviewer.BrightnessContrastGammaDialog.OnBrightnessContrastGammaSetListener;
 import com.quaintsoft.imageviewer.color.BrightnessContrast;
@@ -21,15 +20,14 @@ public class ImageBrightnessContrastGammaChanger implements
 
 	public void onBrightnessContrastGammaSet(int brightness, int contrast, float gamma) {
 		Bitmap bmp = imageViewModel.getImageBitmap();
-		Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Config.ARGB_8888);
 		BrightnessContrast bc = new BrightnessContrast();
 		bc.setBrightness(brightness);
 		bc.setContrast(contrast);
-		bc.apply(bmp, newBmp);
+		bc.apply(bmp);
 		Gamma g = new Gamma();
 		g.setGamma(gamma);
-		g.apply(newBmp, newBmp);
-		imageViewModel.setImageBitmap(newBmp);
+		g.apply(bmp);
+		imageViewModel.invalidate();
 	}
 
 }
