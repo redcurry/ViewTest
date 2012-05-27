@@ -2,8 +2,6 @@ package com.quaintsoft.imageviewer;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,6 +10,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -45,6 +44,7 @@ public class QuaintImageViewerActivity extends Activity {
         setContentView(R.layout.main);
 		setupImageView();
 		setupPreferences();
+		Log.d("blah", System.getProperty("java.io.tmpdir"));
     }
     
     private void setupImageView() {
@@ -230,6 +230,8 @@ public class QuaintImageViewerActivity extends Activity {
 	}
 
 	private void openImage(Uri data) {
+		CachedBitmap cachedBmp = new CachedBitmap(this, data);
+		Log.d("cache", cachedBmp.getWidth() + ", " + cachedBmp.getHeight());
 		imageViewModel.setImageURI(data);
 		fitPrefApplier.apply();
 	}

@@ -17,25 +17,28 @@ public class Gamma extends AbstractColorChanger {
 		int width = src.getWidth();
 		int height = src.getHeight();
 		
-		int[] pixels = new int[width * height];
-		src.getPixels(pixels, 0, width, 0, 0, width, height);
+//		int[] pixels = new int[width * height];
+//		src.getPixels(pixels, 0, width, 0, 0, width, height);
 		
 		int[] powers = new int[256];
 		for (int i = 0; i < powers.length; i++)
 			powers[i] = (int)(Math.pow(i / 255.0f, 1.0f / gamma) * 255);
 		
 		int r, g, b, newR, newG, newB;
-		for (int p = 0; p < pixels.length; p++) {
-			r = Color.red(pixels[p]);
-			g = Color.green(pixels[p]);
-			b = Color.blue(pixels[p]);
-			newR = powers[r];
-			newG = powers[g];
-			newB = powers[b];
-			pixels[p] = Color.rgb(newR, newG, newB);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				int pixel = src.getPixel(i, j);
+				r = Color.red(pixel);
+				g = Color.green(pixel);
+				b = Color.blue(pixel);
+				newR = powers[r];
+				newG = powers[g];
+				newB = powers[b];
+				dst.setPixel(i, j, Color.rgb(newR, newG, newB));
+			}
 		}
 		
-		dst.setPixels(pixels, 0, width, 0, 0, width, height);
+//		dst.setPixels(pixels, 0, width, 0, 0, width, height);
 	}
 	
 	@Override
