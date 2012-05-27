@@ -74,6 +74,4 @@ public class CachedBitmap {
 		return height;
 	}
 	
-	public Bitmap 
-	
 }
