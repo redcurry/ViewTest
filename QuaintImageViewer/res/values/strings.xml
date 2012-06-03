@@ -40,5 +40,7 @@
     <string name="color_correction_text">color correction</string>
     <string name="menu_color_correction_text">color correction</string>
     <string name="brightness_contrast_gamma_title">brightness/contrast/gamma</string>
+    <string name="open_large_image_text">You do not have enough memory to open this image in its full size. Please resize (below) before opening this image.</string>
+    <string name="open_large_image_title">Cannot open large image</string>
 
 </resources>

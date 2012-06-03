@@ -1,17 +1,20 @@
 package com.quaintsoft.imageviewer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -31,6 +34,7 @@ public class QuaintImageViewerActivity extends Activity {
 	private static final int DIALOG_BRIGHTNESS_CONTRAST_GAMMA = 2;
 	private static final int DIALOG_HUE_SATURATION = 3;
 	private static final int DIALOG_COLOR_BALANCE = 4;
+	private static final int DIALOG_OPEN_LARGE_IMAGE = 5;
 	
 	private ImageViewModel imageViewModel;
 	private ImageViewOnTouchListener imageViewOnTouchListener;
@@ -38,6 +42,8 @@ public class QuaintImageViewerActivity extends Activity {
 	
 	private PreferenceListener prefListener;
 	private FitPreferenceApplier fitPrefApplier;
+	
+	private Uri imageUri;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +124,8 @@ public class QuaintImageViewerActivity extends Activity {
 				return createSaveAsDialog();
 			case DIALOG_BRIGHTNESS_CONTRAST_GAMMA:
 				return createBrightnessContrastGammaDialog();
+			case DIALOG_OPEN_LARGE_IMAGE:
+				return createOpenLargeImageDialog();
 			default:
 				return super.onCreateDialog(id);
 		}
@@ -135,6 +143,8 @@ public class QuaintImageViewerActivity extends Activity {
 				((BrightnessContrastGammaDialog)dialog).reset();
 				((BrightnessContrastGammaDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
 				break;
+			case DIALOG_OPEN_LARGE_IMAGE:
+				((OpenLargeImageDialog)dialog).setImageUri(imageUri);
 		}
 	}
 
@@ -145,6 +155,11 @@ public class QuaintImageViewerActivity extends Activity {
 	private Dialog createBrightnessContrastGammaDialog() {
 		return new BrightnessContrastGammaDialog(this,
 				new ImageBrightnessContrastGammaChanger(this, imageViewModel));
+	}
+	
+	private Dialog createOpenLargeImageDialog() {
+		return new OpenLargeImageDialog(this,
+				new LargeImageResizer(this, imageViewModel));
 	}
 
 	@Override
@@ -229,8 +244,33 @@ public class QuaintImageViewerActivity extends Activity {
 	}
 
 	private void openImage(Uri data) {
-		imageViewModel.setImageURI(data);
+		try {
+			imageViewModel.setImageURI(data);
+		} catch (OutOfMemoryError e) {
+			openLargeImage(data);
+		}
 		fitPrefApplier.apply();
+	}
+	
+	private void openLargeImage(Uri data) {
+		imageUri = data;
+		showDialog(DIALOG_OPEN_LARGE_IMAGE);
+	}
+	
+	private void printMemoryInfo() {
+		try {
+			File memfile = new File("/proc/meminfo");
+			BufferedReader in = new BufferedReader(new FileReader(memfile));
+			String lines = "";
+			String line = in.readLine();
+			while (line != null) {
+				lines += line;
+				line = in.readLine();
+			}
+			Log.d("memory", lines);
+		} catch (IOException e) {
+			
+		}
 	}
 	
 }

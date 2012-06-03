@@ -56,13 +56,19 @@ public class ImageViewModel {
 	}
 	
 	public void setImageBitmap(Bitmap imageBitmap) {
-		MutableBitmapConverter mutableConverter = new MutableBitmapConverter();
-		imageBitmap = mutableConverter.convertToMutable(imageBitmap);
+		if (imageBitmap == null)
+			return;
+		if (!imageBitmap.isMutable()) {
+			MutableBitmapConverter mutableConverter = new MutableBitmapConverter();
+			imageBitmap = mutableConverter.convertToMutable(imageBitmap);
+		}
 		imageView.setImageBitmap(imageBitmap);
 		invalidate();
 	}
 	
 	public void setImageURI(Uri data) {
+		if (getImageBitmap() != null)
+			getImageBitmap().recycle();
 		imageView.setImageURI(data);
 		setImageBitmap(getImageBitmap());  // Make it mutable
 		invalidate();
@@ -105,6 +111,7 @@ public class ImageViewModel {
 	
 	public void invalidate() {
 		validateAndSetImageMatrix(getImageMatrix());
+		imageView.invalidate();
 	}
 	
 }
