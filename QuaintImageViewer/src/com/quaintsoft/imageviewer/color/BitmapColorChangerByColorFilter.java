@@ -11,6 +11,7 @@ public abstract class BitmapColorChangerByColorFilter
 	public void apply(Bitmap bmp) {
 		if (bmp == null || !bmp.isMutable())
 			return;
+		
 		Canvas canvas = new Canvas(bmp);
 		canvas.drawBitmap(bmp, new Matrix(), createPaint());
 	}

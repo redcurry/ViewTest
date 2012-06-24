@@ -253,6 +253,8 @@ public class QuaintImageViewerActivity extends Activity {
 	}
 	
 	private void openLargeImage(Uri data) {
+		// TODO: Change logic so that large images are automatically
+		// opened at the best size possible, then inform the user of this
 		imageUri = data;
 		showDialog(DIALOG_OPEN_LARGE_IMAGE);
 	}
