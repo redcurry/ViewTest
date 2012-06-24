@@ -34,7 +34,6 @@ public class QuaintImageViewerActivity extends Activity {
 	private static final int DIALOG_BRIGHTNESS_CONTRAST_GAMMA = 2;
 	private static final int DIALOG_HUE_SATURATION = 3;
 	private static final int DIALOG_COLOR_BALANCE = 4;
-	private static final int DIALOG_OPEN_LARGE_IMAGE = 5;
 	
 	private ImageViewModel imageViewModel;
 	private ImageViewOnTouchListener imageViewOnTouchListener;
@@ -124,8 +123,6 @@ public class QuaintImageViewerActivity extends Activity {
 				return createSaveAsDialog();
 			case DIALOG_BRIGHTNESS_CONTRAST_GAMMA:
 				return createBrightnessContrastGammaDialog();
-			case DIALOG_OPEN_LARGE_IMAGE:
-				return createOpenLargeImageDialog();
 			default:
 				return super.onCreateDialog(id);
 		}
@@ -143,8 +140,6 @@ public class QuaintImageViewerActivity extends Activity {
 				((BrightnessContrastGammaDialog)dialog).reset();
 				((BrightnessContrastGammaDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
 				break;
-			case DIALOG_OPEN_LARGE_IMAGE:
-				((OpenLargeImageDialog)dialog).setImageUri(imageUri);
 		}
 	}
 
@@ -157,11 +152,6 @@ public class QuaintImageViewerActivity extends Activity {
 				new ImageBrightnessContrastGammaChanger(this, imageViewModel));
 	}
 	
-	private Dialog createOpenLargeImageDialog() {
-		return new OpenLargeImageDialog(this,
-				new LargeImageResizer(this, imageViewModel));
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -249,14 +239,15 @@ public class QuaintImageViewerActivity extends Activity {
 		} catch (OutOfMemoryError e) {
 			openLargeImage(data);
 		}
+		
 		fitPrefApplier.apply();
 	}
 	
 	private void openLargeImage(Uri data) {
-		// TODO: Change logic so that large images are automatically
-		// opened at the best size possible, then inform the user of this
-		imageUri = data;
-		showDialog(DIALOG_OPEN_LARGE_IMAGE);
+		// TODO: Tell user that image was resized
+		LargeImageOpener largeImageOpener = new LargeImageOpener(this);
+		Bitmap bmp = largeImageOpener.openImage(data);
+		imageViewModel.setImageBitmap(bmp);
 	}
 	
 	private void printMemoryInfo() {
