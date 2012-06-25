@@ -16,7 +16,8 @@
         <menu>
             <item android:id="@+id/menu_grayscale" android:title="@string/menu_grayscale_text"/>
             <item android:id="@+id/menu_invert" android:title="@string/menu_invert_text"/>
-            <item android:id="@+id/menu_color_correction" android:title="@string/menu_color_correction_text"/>
+            <item android:id="@+id/menu_brightness_contrast" android:title="@string/menu_brightness_contrast_text"/>
+            <item android:id="@+id/menu_gamma" android:title="@string/menu_gama_text"/>
         </menu>
     </item><item android:id="@+id/menu_settings" android:title="@string/menu_settings_text"></item>
     

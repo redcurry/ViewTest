@@ -31,9 +31,10 @@ public class QuaintImageViewerActivity extends Activity {
 	private static final String IMAGE_MATRIX_BUNDLE_KEY = "IMAGE_MATRIX";
 	
 	private static final int DIALOG_SAVE = 1;
-	private static final int DIALOG_BRIGHTNESS_CONTRAST_GAMMA = 2;
-	private static final int DIALOG_HUE_SATURATION = 3;
-	private static final int DIALOG_COLOR_BALANCE = 4;
+	private static final int DIALOG_BRIGHTNESS_CONTRAST = 2;
+	private static final int DIALOG_GAMMA = 3;
+	private static final int DIALOG_HUE_SATURATION = 4;
+	private static final int DIALOG_COLOR_BALANCE = 5;
 	
 	private ImageViewModel imageViewModel;
 	private ImageViewOnTouchListener imageViewOnTouchListener;
@@ -121,8 +122,10 @@ public class QuaintImageViewerActivity extends Activity {
 		switch(id) {
 			case DIALOG_SAVE:
 				return createSaveAsDialog();
-			case DIALOG_BRIGHTNESS_CONTRAST_GAMMA:
-				return createBrightnessContrastGammaDialog();
+			case DIALOG_BRIGHTNESS_CONTRAST:
+				return createBrightnessContrastDialog();
+			case DIALOG_GAMMA:
+				return createGammaDialog();
 			default:
 				return super.onCreateDialog(id);
 		}
@@ -136,10 +139,13 @@ public class QuaintImageViewerActivity extends Activity {
 			case DIALOG_SAVE:
 				((SaveAsDialog)dialog).reset();
 				break;
-			case DIALOG_BRIGHTNESS_CONTRAST_GAMMA:
-				((BrightnessContrastGammaDialog)dialog).reset();
-				((BrightnessContrastGammaDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
+			case DIALOG_BRIGHTNESS_CONTRAST:
+				((BrightnessContrastDialog)dialog).reset();
+				((BrightnessContrastDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
 				break;
+			case DIALOG_GAMMA:
+				((GammaDialog)dialog).reset();
+				((GammaDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
 		}
 	}
 
@@ -147,9 +153,13 @@ public class QuaintImageViewerActivity extends Activity {
 		return new SaveAsDialog(this, new ImageSaver(this, imageViewModel));
 	}
 	
-	private Dialog createBrightnessContrastGammaDialog() {
-		return new BrightnessContrastGammaDialog(this,
-				new ImageBrightnessContrastGammaChanger(this, imageViewModel));
+	private Dialog createBrightnessContrastDialog() {
+		return new BrightnessContrastDialog(this,
+				new ImageBrightnessContrastChanger(this, imageViewModel));
+	}
+	
+	private Dialog createGammaDialog() {
+		return new GammaDialog(this, new ImageGammaChanger(this, imageViewModel));
 	}
 	
 	@Override
@@ -174,8 +184,11 @@ public class QuaintImageViewerActivity extends Activity {
 			case R.id.menu_invert:
 				changeColors(new InvertColors());
 				return true;
-			case R.id.menu_color_correction:
-				showDialog(DIALOG_BRIGHTNESS_CONTRAST_GAMMA);
+			case R.id.menu_brightness_contrast:
+				showDialog(DIALOG_BRIGHTNESS_CONTRAST);
+				return true;
+			case R.id.menu_gamma:
+				showDialog(DIALOG_GAMMA);
 				return true;
 			case R.id.menu_settings:
 				showSettings();

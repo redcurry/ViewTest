@@ -18,36 +18,34 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.quaintsoft.imageviewer.color.BrightnessContrast;
 import com.quaintsoft.imageviewer.color.Gamma;
 
-public class BrightnessContrastGammaDialog extends AlertDialog
+public class GammaDialog extends AlertDialog
 		implements OnClickListener, OnSeekBarChangeListener {
 
 	private Context context;
-	private OnBrightnessContrastGammaSetListener callBack;
+	private OnGammaSetListener callBack;
 	private View view;
 	private Bitmap bitmapForPreview;
 	private Bitmap originalPreviewBitmap;
 	private Bitmap currentPreviewBitmap;
 	
-	private BrightnessContrast brightnessContrast;
 	private Gamma gamma;
 	
-	public interface OnBrightnessContrastGammaSetListener {
-		void onBrightnessContrastGammaSet(int brightness, int contrast, float gamma);
+	public interface OnGammaSetListener {
+		void onGammaSet(float gamma);
 	}
 	
-	public BrightnessContrastGammaDialog(Context context, OnBrightnessContrastGammaSetListener callBack) {
+	public GammaDialog(Context context,
+			OnGammaSetListener callBack) {
 		super(context);
 		
 		this.context = context;
 		this.callBack = callBack;
 		
-		brightnessContrast = new BrightnessContrast();
 		gamma = new Gamma();
 		
-		setTitle(R.string.brightness_contrast_gamma_title);
+		setTitle(R.string.gamma_title);
 		setView(createView());
 		setButton(BUTTON_POSITIVE, "ok", this);
 		setButton(BUTTON_NEGATIVE, "cancel", (OnClickListener)null);
@@ -57,14 +55,12 @@ public class BrightnessContrastGammaDialog extends AlertDialog
 	
 	private View createView() {
 		LayoutInflater inflater = LayoutInflater.from(context);
-		view = inflater.inflate(R.layout.brightness_contrast_gamma, null);
+		view = inflater.inflate(R.layout.gamma, null);
 		return view;
 	}
 	
 	private void setupView() {
 		setupPreview();
-		getBrightnessSeekBar().setOnSeekBarChangeListener(this);
-		getContrastSeekBar().setOnSeekBarChangeListener(this);
 		getGammaSeekBar().setOnSeekBarChangeListener(this);
 		setupResetButton();
 	}
@@ -85,17 +81,14 @@ public class BrightnessContrastGammaDialog extends AlertDialog
 	}
 	
 	private void updatePreview() {
-		brightnessContrast.setBrightness(getBrightness());
-		brightnessContrast.setContrast(getContrast());
-		currentPreviewBitmap = originalPreviewBitmap.copy(Config.ARGB_8888, true);
-		brightnessContrast.apply(currentPreviewBitmap);
 		gamma.setGamma(getGamma());
+		currentPreviewBitmap = originalPreviewBitmap.copy(Config.ARGB_8888, true);
 		gamma.apply(currentPreviewBitmap);
 		getPreview().setImageBitmap(currentPreviewBitmap);
 	}
 
 	private ImageView getPreview() {
-		return (ImageView)view.findViewById(R.id.bcg_preview);
+		return (ImageView)view.findViewById(R.id.gamma_preview);
 	}
 	
 	private Bitmap resizeBitmap(Bitmap bmp, int width, int height) {
@@ -113,60 +106,22 @@ public class BrightnessContrastGammaDialog extends AlertDialog
 		return newBmp;
 	}
 	
-	private SeekBar getBrightnessSeekBar() {
-		return (SeekBar)view.findViewById(R.id.bcg_brightness_seek_bar);
-	}
-	
-	private SeekBar getContrastSeekBar() {
-		return (SeekBar)view.findViewById(R.id.bcg_contrast_seek_bar);
-	}
-	
 	private SeekBar getGammaSeekBar() {
-		return (SeekBar)view.findViewById(R.id.bcg_gamma_seek_bar);
+		return (SeekBar)view.findViewById(R.id.gamma_seek_bar);
 	}
 	
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		switch (seekBar.getId()) {
-			case R.id.bcg_brightness_seek_bar:
-				getBrightnessTextView().setText(String.valueOf(getBrightness()));
-				break;
-			case R.id.bcg_contrast_seek_bar:
-				getContrastTextView().setText(String.valueOf(getContrast()));
-				break;
-			case R.id.bcg_gamma_seek_bar:
-				getGammaTextView().setText(String.format("%.2f", getGamma()));
+			case R.id.gamma_seek_bar:
+				getGammaTextView().setText(String.valueOf(getGamma()));
 				break;
 		}
 		
 		updatePreview();
 	}
 	
-	private TextView getBrightnessTextView() {
-		return (TextView)view.findViewById(R.id.bcg_brightness_value);
-	}
-	
-	public int getBrightness() {
-		return progressToBrightness(getBrightnessSeekBar().getProgress());
-	}
-	
-	private int progressToBrightness(int progress) {
-		return progress - 255;
-	}
-
-	private TextView getContrastTextView() {
-		return (TextView)view.findViewById(R.id.bcg_contrast_value);
-	}
-
-	public int getContrast() {
-		return progressToContrast(getContrastSeekBar().getProgress());
-	}
-	
-	private int progressToContrast(int progress) {
-		return progress - 127;
-	}
-
 	private TextView getGammaTextView() {
-		return (TextView)view.findViewById(R.id.bcg_gamma_value);
+		return (TextView)view.findViewById(R.id.gamma_value);
 	}
 
 	public float getGamma() {
@@ -199,12 +154,10 @@ public class BrightnessContrastGammaDialog extends AlertDialog
 	}
 	
 	private Button getResetButton() {
-		return (Button)view.findViewById(R.id.bcg_reset_button);
+		return (Button)view.findViewById(R.id.gamma_reset_button);
 	}
 	
 	public void reset() {
-		getBrightnessSeekBar().setProgress(255);
-		getContrastSeekBar().setProgress(127);
 		getGammaSeekBar().setProgress(99);
 	}
 
@@ -212,7 +165,7 @@ public class BrightnessContrastGammaDialog extends AlertDialog
 		switch (which) {
 			case BUTTON_POSITIVE:
 				if (callBack != null)
-					callBack.onBrightnessContrastGammaSet(getBrightness(), getContrast(), getGamma());
+					callBack.onGammaSet(getGamma());
 				break;
 		}
 	}
