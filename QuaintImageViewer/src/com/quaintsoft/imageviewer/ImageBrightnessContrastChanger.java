@@ -17,7 +17,6 @@ public class ImageBrightnessContrastChanger implements
 		this.imageViewModel = imageViewModel;
 	}
 
-	// TODO: Separate brightness contrast from gamma
 	public void onBrightnessContrastSet(int brightness, int contrast) {
 		Bitmap bmp = imageViewModel.getImageBitmap();
 		BrightnessContrast bc = new BrightnessContrast();

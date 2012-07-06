@@ -10,6 +10,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
 import android.graphics.RectF;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -35,9 +37,9 @@ public class GammaDialog extends AlertDialog
 	public interface OnGammaSetListener {
 		void onGammaSet(float gamma);
 	}
-	
-	public GammaDialog(Context context,
-			OnGammaSetListener callBack) {
+	// TODO: Can I derive GammaDialog from some general one
+	// that handles all the preview logic?
+	public GammaDialog(Context context,	OnGammaSetListener callBack) {
 		super(context);
 		
 		this.context = context;
@@ -67,7 +69,7 @@ public class GammaDialog extends AlertDialog
 	
 	private void setupPreview() {
 		this.setOnShowListener(new OnShowListener() {
-			public void onShow(DialogInterface arg0) {
+			public void onShow(DialogInterface dialog) {
 				setupPreviewBitmap();
 			}
 		});
@@ -76,15 +78,16 @@ public class GammaDialog extends AlertDialog
 	private void setupPreviewBitmap() {
 		ImageView preview = getPreview();
 		originalPreviewBitmap = resizeBitmap(bitmapForPreview, preview.getWidth(), preview.getHeight());
-		currentPreviewBitmap = Bitmap.createBitmap(originalPreviewBitmap.getWidth(), originalPreviewBitmap.getHeight(), Config.ARGB_8888);
 		updatePreview();
 	}
 	
 	private void updatePreview() {
-		gamma.setGamma(getGamma());
-		currentPreviewBitmap = originalPreviewBitmap.copy(Config.ARGB_8888, true);
-		gamma.apply(currentPreviewBitmap);
-		getPreview().setImageBitmap(currentPreviewBitmap);
+		if (originalPreviewBitmap != null) {
+			gamma.setGamma(getGamma());
+			currentPreviewBitmap = originalPreviewBitmap.copy(Config.ARGB_8888, true);
+			gamma.apply(currentPreviewBitmap);
+			getPreview().setImageBitmap(currentPreviewBitmap);
+		}
 	}
 
 	private ImageView getPreview() {
@@ -111,12 +114,7 @@ public class GammaDialog extends AlertDialog
 	}
 	
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		switch (seekBar.getId()) {
-			case R.id.gamma_seek_bar:
-				getGammaTextView().setText(String.valueOf(getGamma()));
-				break;
-		}
-		
+		getGammaTextView().setText(String.valueOf(getGamma()));
 		updatePreview();
 	}
 	

@@ -144,8 +144,9 @@ public class QuaintImageViewerActivity extends Activity {
 				((BrightnessContrastDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
 				break;
 			case DIALOG_GAMMA:
-				((GammaDialog)dialog).reset();
-				((GammaDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
+				((GammaPreviewDialog)dialog).reset();
+				((GammaPreviewDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
+				break;
 		}
 	}
 
@@ -159,7 +160,7 @@ public class QuaintImageViewerActivity extends Activity {
 	}
 	
 	private Dialog createGammaDialog() {
-		return new GammaDialog(this, new ImageGammaChanger(this, imageViewModel));
+		return new GammaPreviewDialog(this, new ImageGammaChanger(this, imageViewModel));
 	}
 	
 	@Override
