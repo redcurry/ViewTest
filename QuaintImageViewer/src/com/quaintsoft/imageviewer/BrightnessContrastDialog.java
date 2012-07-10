@@ -1,36 +1,21 @@
 package com.quaintsoft.imageviewer;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Matrix.ScaleToFit;
-import android.graphics.RectF;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.quaintsoft.imageviewer.color.BrightnessContrast;
 
-public class BrightnessContrastDialog extends AlertDialog
-		implements OnClickListener, OnSeekBarChangeListener {
+public class BrightnessContrastDialog extends PreviewDialog
+		implements OnSeekBarChangeListener {
 
-	private Context context;
 	private OnBrightnessContrastSetListener callBack;
-	private View view;
-	private Bitmap bitmapForPreview;
-	private Bitmap originalPreviewBitmap;
-	private Bitmap currentPreviewBitmap;
-	
 	private BrightnessContrast brightnessContrast;
+	private int brightness, contrast;
 	
 	public interface OnBrightnessContrastSetListener {
 		void onBrightnessContrastSet(int brightness, int contrast);
@@ -40,72 +25,41 @@ public class BrightnessContrastDialog extends AlertDialog
 			OnBrightnessContrastSetListener callBack) {
 		super(context);
 		
-		this.context = context;
 		this.callBack = callBack;
-		
 		brightnessContrast = new BrightnessContrast();
-		
-		setTitle(R.string.brightness_contrast_title);
-		setView(createView());
-		setButton(BUTTON_POSITIVE, "ok", this);
-		setButton(BUTTON_NEGATIVE, "cancel", (OnClickListener)null);
-		
-		setupView();
 	}
-	
-	private View createView() {
-		LayoutInflater inflater = LayoutInflater.from(context);
-		view = inflater.inflate(R.layout.brightness_contrast, null);
-		return view;
+		
+	@Override
+	protected int getTitleID() {
+		return R.string.brightness_contrast_title;
 	}
-	
-	private void setupView() {
-		setupPreview();
-		getBrightnessSeekBar().setOnSeekBarChangeListener(this);
-		getContrastSeekBar().setOnSeekBarChangeListener(this);
+
+	@Override
+	protected int getLayoutID() {
+		return R.layout.brightness_contrast;
+	}
+
+	@Override
+	protected int getPreviewID() {
+		return R.id.bc_preview;
+	}
+
+	@Override
+	protected void applyColorChanger(Bitmap bmp) {
+		brightnessContrast.setBrightness(brightness);
+		brightnessContrast.setContrast(contrast);
+		brightnessContrast.apply(bmp);
+	}
+
+	@Override
+	protected void setupView() {
+		setupSeekBars();
 		setupResetButton();
 	}
 	
-	private void setupPreview() {
-		this.setOnShowListener(new OnShowListener() {
-			public void onShow(DialogInterface arg0) {
-				setupPreviewBitmap();
-			}
-		});
-	}
-	
-	private void setupPreviewBitmap() {
-		ImageView preview = getPreview();
-		originalPreviewBitmap = resizeBitmap(bitmapForPreview, preview.getWidth(), preview.getHeight());
-		currentPreviewBitmap = Bitmap.createBitmap(originalPreviewBitmap.getWidth(), originalPreviewBitmap.getHeight(), Config.ARGB_8888);
-		updatePreview();
-	}
-	
-	private void updatePreview() {
-		brightnessContrast.setBrightness(getBrightness());
-		brightnessContrast.setContrast(getContrast());
-		currentPreviewBitmap = originalPreviewBitmap.copy(Config.ARGB_8888, true);
-		brightnessContrast.apply(currentPreviewBitmap);
-		getPreview().setImageBitmap(currentPreviewBitmap);
-	}
-
-	private ImageView getPreview() {
-		return (ImageView)view.findViewById(R.id.bc_preview);
-	}
-	
-	private Bitmap resizeBitmap(Bitmap bmp, int width, int height) {
-		if (bmp == null)
-			return null;
-		RectF src = new RectF(0, 0, bmp.getWidth(), bmp.getHeight());
-		RectF dst = new RectF(0, 0, width, height);
-		Matrix imageMatrix = new Matrix();
-		imageMatrix.setRectToRect(src, dst, ScaleToFit.START);
-		RectF newBmpRect = new RectF(0, 0, bmp.getWidth(), bmp.getHeight());
-		imageMatrix.mapRect(newBmpRect);
-		Bitmap newBmp = Bitmap.createBitmap((int)newBmpRect.width(), (int)newBmpRect.height(), Config.ARGB_8888);
-		Canvas canvas = new Canvas(newBmp);
-		canvas.drawBitmap(bmp, imageMatrix, null);
-		return newBmp;
+	private void setupSeekBars() {
+		getBrightnessSeekBar().setOnSeekBarChangeListener(this);
+		getContrastSeekBar().setOnSeekBarChangeListener(this);
 	}
 	
 	private SeekBar getBrightnessSeekBar() {
@@ -114,55 +68,6 @@ public class BrightnessContrastDialog extends AlertDialog
 	
 	private SeekBar getContrastSeekBar() {
 		return (SeekBar)view.findViewById(R.id.bc_contrast_seek_bar);
-	}
-	
-	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		switch (seekBar.getId()) {
-			case R.id.bc_brightness_seek_bar:
-				getBrightnessTextView().setText(String.valueOf(getBrightness()));
-				break;
-			case R.id.bc_contrast_seek_bar:
-				getContrastTextView().setText(String.valueOf(getContrast()));
-				break;
-		}
-		
-		updatePreview();
-	}
-	
-	private TextView getBrightnessTextView() {
-		return (TextView)view.findViewById(R.id.bc_brightness_value);
-	}
-	
-	public int getBrightness() {
-		return progressToBrightness(getBrightnessSeekBar().getProgress());
-	}
-	
-	private int progressToBrightness(int progress) {
-		return progress - 255;
-	}
-
-	private TextView getContrastTextView() {
-		return (TextView)view.findViewById(R.id.bc_contrast_value);
-	}
-
-	public int getContrast() {
-		return progressToContrast(getContrastSeekBar().getProgress());
-	}
-	
-	private int progressToContrast(int progress) {
-		return progress - 127;
-	}
-
-	public void onStartTrackingTouch(SeekBar seekBar) {
-
-	}
-
-	public void onStopTrackingTouch(SeekBar seekBar) {
-
-	}
-	
-	public void setBitmapForPreview(Bitmap bmp) {
-		bitmapForPreview = bmp;
 	}
 	
 	private void setupResetButton() {
@@ -183,13 +88,48 @@ public class BrightnessContrastDialog extends AlertDialog
 		getContrastSeekBar().setProgress(127);
 	}
 
-	public void onClick(DialogInterface dialog, int which) {
-		switch (which) {
-			case BUTTON_POSITIVE:
-				if (callBack != null)
-					callBack.onBrightnessContrastSet(getBrightness(), getContrast());
+	@Override
+	protected void okButtonClicked() {
+		callBack.onBrightnessContrastSet(brightness, contrast);
+	}
+
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		switch (seekBar.getId()) {
+			case R.id.bc_brightness_seek_bar:
+				brightness = progressToBrightness(progress);
+				getBrightnessTextView().setText(String.valueOf(brightness));
+				break;
+			case R.id.bc_contrast_seek_bar:
+				contrast = progressToContrast(progress);
+				getContrastTextView().setText(String.valueOf(contrast));
 				break;
 		}
+	
+		updatePreview();
+	}
+	
+	private int progressToBrightness(int progress) {
+		return progress - 255;
+	}
+	
+	private int progressToContrast(int progress) {
+		return progress - 127;
+	}
+	
+	private TextView getBrightnessTextView() {
+		return (TextView)view.findViewById(R.id.bc_brightness_value);
+	}
+	
+	private TextView getContrastTextView() {
+		return (TextView)view.findViewById(R.id.bc_contrast_value);
+	}
+
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		
+	}
+
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		
 	}
 
 }

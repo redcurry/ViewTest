@@ -18,40 +18,28 @@ import android.widget.ImageView;
 public abstract class PreviewDialog extends AlertDialog
 		implements OnClickListener {
 	
-	// TODO: Refactor so that setupOtherViews() is not called every time
-	// dialog is shown. Go through steps in showing a dialog (in my mind)
-	// in order to figure out when things need to be set up (think!)
-
 	protected Context context;
 	protected View view;
 	private Bitmap bitmapForPreview;
 	private Bitmap originalPreviewBitmap;
 	private Bitmap currentPreviewBitmap;
 	
-	private boolean initialized = false;
-	
 	public PreviewDialog(Context context) {
 		super(context);
 		
 		this.context = context;
-		
-		setTitle(getTitleID());
-		setView(createView());
-		setupOkButton();
-		setupCancelButton();
-		
-		setOnShowListener(new OnShowListener() {
-			public void onShow(DialogInterface dialog) {
-				if (!initialized) {
-					setupDialog();
-					initialized = true;
-				}
-			}
-		});
+		setupDialog();
 	}
 	
 	private void setupDialog() {
+		setTitle(getTitleID());
+		setView(createView());
+	
+		setupOkButton();
+		setupCancelButton();
+		
 		setupView();
+		setupOnShow();
 	}
 	
 	protected abstract int getTitleID();
@@ -64,17 +52,22 @@ public abstract class PreviewDialog extends AlertDialog
 	
 	protected abstract int getLayoutID();
 	
-	protected abstract void setupOkButton();
+	protected void setupOkButton() {
+		setButton(BUTTON_POSITIVE, "ok", this);
+	}
 	
 	protected void setupCancelButton() {
 		setButton(BUTTON_NEGATIVE, "cancel", (OnClickListener)null);
 	}
 	
-	protected void setupView() {
-		setupPreview();
-		setupOtherViews();
+	private void setupOnShow() {
+		setOnShowListener(new OnShowListener() {
+			public void onShow(DialogInterface dialog) {
+				setupPreview();
+			}
+		});
 	}
-	
+
 	protected void setupPreview() {
 		originalPreviewBitmap = resizeBitmapToPreview(bitmapForPreview);
 		updatePreview();
@@ -84,13 +77,14 @@ public abstract class PreviewDialog extends AlertDialog
 		ImageView preview = getPreview();
 		return resizeBitmap(bmp, preview.getWidth(), preview.getHeight());
 	}
-	
+
 	private ImageView getPreview() {
 		return (ImageView)view.findViewById(getPreviewID());
 	}
 
 	protected abstract int getPreviewID();
 
+	// TODO: Eventually, will have to move out to a BitmapResizer
 	private Bitmap resizeBitmap(Bitmap bmp, int width, int height) {
 		if (bmp == null)
 			return null;
@@ -122,10 +116,9 @@ public abstract class PreviewDialog extends AlertDialog
 	
 	protected abstract void applyColorChanger(Bitmap bmp);
 	
-	protected abstract void setupOtherViews();
+	protected abstract void setupView();
 	
 	public void setBitmapForPreview(Bitmap bmp) {
-		Log.d("debug", "bitmap updated");
 		bitmapForPreview = bmp;
 	}
 	

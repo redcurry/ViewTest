@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
-import com.quaintsoft.imageviewer.GammaPreviewDialog.OnGammaSetListener;
+import com.quaintsoft.imageviewer.GammaDialog.OnGammaSetListener;
 import com.quaintsoft.imageviewer.color.Gamma;
 
 public class ImageGammaChanger implements OnGammaSetListener {
