@@ -1,5 +1,7 @@
 package com.quaintsoft.imageviewer;
 
+import java.lang.ref.WeakReference;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -12,21 +14,21 @@ public class ImageGammaChanger implements OnGammaSetListener {
 	private Context context;
 	private ImageViewModel imageViewModel;
 	
-	Bitmap bmp;
+	Gamma gamma;
+	WeakReference bmpRef;
 	
-	public class WorkThread extends AsyncTask<Float, Void, Void> {
+	public class WorkThread extends AsyncTask<Void, Void, Void> {
 
 		@Override
-		protected Void doInBackground(Float... args) {
-			Gamma g = new Gamma();
-			g.setGamma(args[0]);
-			g.apply(bmp);
+		protected Void doInBackground(Void... args) {
+			gamma.apply((Bitmap)bmpRef.get());
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-			imageViewModel.invalidate();
+			if (imageViewModel != null)
+				imageViewModel.invalidate();
 		}
 		
 	}
@@ -34,12 +36,16 @@ public class ImageGammaChanger implements OnGammaSetListener {
 	public ImageGammaChanger(Context context, ImageViewModel imageViewModel) {
 		this.context = context;
 		this.imageViewModel = imageViewModel;
+		
+		gamma = new Gamma();
 	}
 
-	public void onGammaSet(float gamma) {
-		bmp = imageViewModel.getImageBitmap();
+	public void onGammaSet(float gammaValue) {
+		bmpRef = new WeakReference(imageViewModel.getImageBitmap());
+		gamma.setGamma(gammaValue);
+		
 		WorkThread worker = new WorkThread();
-		worker.execute(gamma);
+		worker.execute();
 	}
 
 }

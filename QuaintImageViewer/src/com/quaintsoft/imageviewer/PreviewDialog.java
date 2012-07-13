@@ -69,8 +69,10 @@ public abstract class PreviewDialog extends AlertDialog
 	}
 
 	protected void setupPreview() {
-		originalPreviewBitmap = resizeBitmapToPreview(bitmapForPreview);
-		updatePreview();
+		if (bitmapForPreview != null) {
+			originalPreviewBitmap = resizeBitmapToPreview(bitmapForPreview);
+			updatePreview();
+		}
 	}
 
 	private Bitmap resizeBitmapToPreview(Bitmap bmp) {
@@ -101,7 +103,8 @@ public abstract class PreviewDialog extends AlertDialog
 	}
 	
 	protected void updatePreview() {
-		getPreview().setImageBitmap(applyColorChangerToPreview());
+		if (originalPreviewBitmap != null)
+			getPreview().setImageBitmap(applyColorChangerToPreview());
 	}
 	
 	private Bitmap applyColorChangerToPreview() {
@@ -119,6 +122,8 @@ public abstract class PreviewDialog extends AlertDialog
 	protected abstract void setupView();
 	
 	public void setBitmapForPreview(Bitmap bmp) {
+		if (bmp == null)
+			Log.d("preview", "in set bitmap, bmp is null");
 		bitmapForPreview = bmp;
 	}
 	
