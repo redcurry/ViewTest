@@ -51,6 +51,7 @@ public class QuaintImageViewerActivity extends Activity {
         setContentView(R.layout.main);
 		setupImageView();
 		setupPreferences();
+		Log.d("blah", System.getProperty("java.io.tmpdir"));
     }
     
     private void setupImageView() {
@@ -253,7 +254,7 @@ public class QuaintImageViewerActivity extends Activity {
 		} catch (OutOfMemoryError e) {
 			openLargeImage(data);
 		}
-		
+
 		fitPrefApplier.apply();
 	}
 	
