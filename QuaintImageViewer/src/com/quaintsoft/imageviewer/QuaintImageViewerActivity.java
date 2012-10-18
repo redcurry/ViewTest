@@ -28,8 +28,6 @@ import com.quaintsoft.imageviewer.preference.Preferences;
 public class QuaintImageViewerActivity extends Activity {
 	private static final int OPEN_REQUEST_CODE  = 1;
 	
-	private static final String IMAGE_MATRIX_BUNDLE_KEY = "IMAGE_MATRIX";
-	
 	private static final int DIALOG_SAVE = 1;
 	private static final int DIALOG_BRIGHTNESS_CONTRAST = 2;
 	private static final int DIALOG_GAMMA = 3;
@@ -39,6 +37,8 @@ public class QuaintImageViewerActivity extends Activity {
 	private ImageViewModel imageViewModel;
 	private ImageViewOnTouchListener imageViewOnTouchListener;
 	private ImageViewZoomer imageViewZoomer;
+	
+	private ImageDataRestorer imageDataRestorer;
 	
 	private PreferenceListener prefListener;
 	private FitPreferenceApplier fitPrefApplier;
@@ -51,6 +51,9 @@ public class QuaintImageViewerActivity extends Activity {
         setContentView(R.layout.main);
 		setupImageView();
 		setupPreferences();
+		
+		imageDataRestorer = new ImageDataRestorer(this, imageViewModel);
+		
 		Log.d("blah", System.getProperty("java.io.tmpdir"));
     }
     
@@ -73,51 +76,20 @@ public class QuaintImageViewerActivity extends Activity {
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		
-		restoreImage();
-		restoreImageMatrix(savedInstanceState);
-	}
-	
-	private void restoreImage() {
-		Bitmap imageBitmap = (Bitmap)getLastNonConfigurationInstance();
-		imageViewModel.setImageBitmap(imageBitmap);
-	}
-	
-	private void restoreImageMatrix(Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			float[] imageMatrixValues = savedInstanceState.getFloatArray(IMAGE_MATRIX_BUNDLE_KEY);
-			imageViewModel.validateAndSetImageMatrix(getMatrixFromValues(imageMatrixValues));
-		}
+		imageDataRestorer.restore(savedInstanceState);
 	}
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-		return imageViewModel.getImageBitmap();
+		return imageDataRestorer.getImageData();
 	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		saveImageMatrix(outState);
+		imageDataRestorer.store(outState);
 	}
 	
-	private void saveImageMatrix(Bundle outState) {
-		Matrix imageMatrix = imageViewModel.getImageMatrix();
-		outState.putFloatArray(IMAGE_MATRIX_BUNDLE_KEY, getMatrixValues(imageMatrix));
-	}
-	
-	private float[] getMatrixValues(Matrix matrix) {
-		float[] values = new float[9];
-		matrix.getValues(values);
-		return values;
-	}
-
-	private Matrix getMatrixFromValues(float[] values) {
-		Matrix matrix = new Matrix();
-		matrix.setValues(values);
-		return matrix;
-	}
-
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch(id) {
