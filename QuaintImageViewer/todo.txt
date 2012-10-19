@@ -1,0 +1,12 @@
+TODO:
+
+When first installing the program, the image is antialiased,
+even though the option to antialias is turned off
+  - uninstall the program by running:
+    adb uninstall com.quaintsoft.imageviewer
+    
+Undo
+
+"Thinking" or "Please wait" dialog
+
+Option to limit max zoom
