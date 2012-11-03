@@ -11,12 +11,15 @@ import android.view.View.OnTouchListener;
 public class ImageViewOnTouchListener implements OnTouchListener {
 	
 	private ImageViewModel imageViewAdapter;
+	private ImageViewZoomer imageViewZoomer;
 	
 	private GestureDetector scrollGestureDetector;
 	private ScaleGestureDetector scaleGestureDetector;
 	
-	public ImageViewOnTouchListener(Context context, ImageViewModel adapter) {
+	public ImageViewOnTouchListener(Context context, ImageViewModel adapter, ImageViewZoomer zoomer) {
 		imageViewAdapter = adapter;
+		imageViewZoomer = zoomer;
+		
 		setupScrollGestureDetector(context);
 		setupScaleGestureDetector(context);
 	}
@@ -46,9 +49,7 @@ public class ImageViewOnTouchListener implements OnTouchListener {
 					float scale = detector.getScaleFactor();
 					float px = detector.getFocusX();
 					float py = detector.getFocusY();
-					Matrix imageMatrix = imageViewAdapter.getImageMatrix();
-					Matrix newImageMatrix = MatrixScaler.scaleBy(imageMatrix, scale, px, py);
-					imageViewAdapter.validateAndSetImageMatrix(newImageMatrix);
+					imageViewZoomer.zoomImageBy(scale, px, py);
 					return true;
 				}
 		});

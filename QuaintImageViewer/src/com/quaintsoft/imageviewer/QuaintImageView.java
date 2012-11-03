@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 public class QuaintImageView extends ImageView {
 	
-	private boolean antialiasing = true;
+	private boolean antialiasing = false;
 
 	public QuaintImageView(Context context) {
 		super(context);

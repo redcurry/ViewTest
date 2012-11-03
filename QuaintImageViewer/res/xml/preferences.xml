@@ -7,8 +7,10 @@
 			android:defaultValue="@string/pref_list_fit_default_value"
 			android:key="@string/pref_list_fit_selected_option" />
 		<CheckBoxPreference android:key="@string/pref_center_option"
-			android:title="@string/pref_center_text" android:summary="@string/pref_center_summary" />
-		<CheckBoxPreference android:summary="@string/pref_antialias_summary" android:title="@string/pref_antialias_text" android:key="@string/pref_antialias_option"/>
+			android:title="@string/pref_center_text" android:summary="@string/pref_center_summary" android:defaultValue="@string/pref_center_default"/>
+		<CheckBoxPreference android:summary="@string/pref_antialias_summary" android:title="@string/pref_antialias_text" android:key="@string/pref_antialias_option" android:defaultValue="@string/pref_antialias_default"/>
+		<EditTextPreference android:title="@string/pref_max_zoom_title" android:key="@string/pref_max_zoom_option" android:defaultValue="@string/pref_max_zoom_default" android:summary="@string/pref_max_zoom_summary"/>
+		<EditTextPreference android:title="@string/pref_min_zoom_title" android:key="@string/pref_min_zoom_option" android:defaultValue="@string/pref_min_zoom_default" android:summary="@string/pref_min_zoom_summary"/>
 	</PreferenceCategory>
 
 

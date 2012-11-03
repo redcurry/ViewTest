@@ -35,8 +35,8 @@ public class QuaintImageViewerActivity extends Activity {
 	private static final int DIALOG_COLOR_BALANCE = 5;
 	
 	private ImageViewModel imageViewModel;
-	private ImageViewOnTouchListener imageViewOnTouchListener;
 	private ImageViewZoomer imageViewZoomer;
+	private ImageViewOnTouchListener imageViewOnTouchListener;
 	
 	private ImageDataRestorer imageDataRestorer;
 	
@@ -60,13 +60,13 @@ public class QuaintImageViewerActivity extends Activity {
     private void setupImageView() {
 		QuaintImageView imageView = (QuaintImageView)findViewById(R.id.image_view);
 		imageViewModel = new ImageViewModel(imageView);
-		imageViewOnTouchListener = new ImageViewOnTouchListener(this, imageViewModel);
-		imageView.setOnTouchListener(imageViewOnTouchListener);
 		imageViewZoomer = new ImageViewZoomer(imageViewModel);
+		imageViewOnTouchListener = new ImageViewOnTouchListener(this, imageViewModel, imageViewZoomer);
+		imageView.setOnTouchListener(imageViewOnTouchListener);
     }
     
     private void setupPreferences() {
-    	prefListener = new PreferenceListener(this, imageViewModel);
+    	prefListener = new PreferenceListener(this, imageViewModel, imageViewZoomer);
     	fitPrefApplier = new FitPreferenceApplier(this, imageViewZoomer);
     	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

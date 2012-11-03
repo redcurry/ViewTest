@@ -44,5 +44,18 @@
     <string name="open_large_image_text">You do not have enough memory to open this image in its full size. Please resize (below) before opening this image.</string>
     <string name="open_large_image_title">Cannot open large image</string>
     <string name="menu_gama_text">gamma</string>
+    <string name="pref_max_zoom_option">pref_max_zoom_option</string>
+    <string name="pref_max_zoom_title">maximum zoom</string>
+    <string name="pref_min_zoom_option">pref_min_zoom_option</string>
+    <string name="pref_min_zoom_title">minimum zoom</string>
+    <string name="pref_max_zoom_default">100</string>
+    <string name="pref_min_zoom_default">0.01</string>
+    <string name="pref_center_default">true</string>
+    <string name="pref_antialias_default">false</string>
+    <string name="pref_no_number_error">Error: Value was not a number.</string>
+    <string name="pref_max_less_than_min_error">Error: Maximum zoom was less than minimum zoom.</string>
+    <string name="pref_max_zoom_summary">set the maximum zoom (proportional to image)</string>
+    <string name="pref_min_zoom_summary">set the minimum zoom (proportional to image)</string>
+    <string name="pref_not_greater_than_zero_error">Error: Value must be greater than zero.</string>
 
 </resources>
