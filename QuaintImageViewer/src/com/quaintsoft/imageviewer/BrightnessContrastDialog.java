@@ -31,7 +31,7 @@ public class BrightnessContrastDialog extends PreviewDialog
 		
 	@Override
 	protected int getTitleID() {
-		return R.string.brightness_contrast_title;
+		return R.string.dialog_brightness_contrast_title;
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import android.graphics.Color;
 public abstract class BitmapColorChangerByPixelFunction
 	implements BitmapColorChanger, PixelFunction {
 	
-	private int[] values;
+	protected int[] values;
 	
 	public void apply(Bitmap bmp) {
 		if (bmp == null || !bmp.isMutable())
@@ -21,13 +21,13 @@ public abstract class BitmapColorChangerByPixelFunction
 		}
 	}
 	
-	private void applyTo256Values() {
+	protected void applyTo256Values() {
 		values = new int[256];
 		for (int i = 0; i < values.length; i++)
 			values[i] = pixelFunction(i);
 	}
 
-	private void applyToAllPixels(Bitmap bmp) {
+	protected void applyToAllPixels(Bitmap bmp) {
 		int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
 		bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
 		
@@ -37,13 +37,13 @@ public abstract class BitmapColorChangerByPixelFunction
 		bmp.setPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
 	}
 	
-	private void applyPixelByPixel(Bitmap bmp) {
+	protected void applyPixelByPixel(Bitmap bmp) {
 		for (int x = 0; x < bmp.getWidth(); x++)
 			for (int y = 0; y < bmp.getHeight(); y++)
 				bmp.setPixel(x, y, applyToPixel(bmp.getPixel(x, y)));
 	}
 	
-	private int applyToPixel(int pixel) {
+	protected int applyToPixel(int pixel) {
 		int r = Color.red(pixel);
 		int g = Color.green(pixel);
 		int b = Color.blue(pixel);

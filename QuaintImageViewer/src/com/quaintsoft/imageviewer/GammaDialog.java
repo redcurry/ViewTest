@@ -29,7 +29,7 @@ public class GammaDialog extends PreviewDialog
 	
 	@Override
 	protected int getTitleID() {
-		return R.string.gamma_title;
+		return R.string.dialog_gamma_title;
 	}
 
 	@Override

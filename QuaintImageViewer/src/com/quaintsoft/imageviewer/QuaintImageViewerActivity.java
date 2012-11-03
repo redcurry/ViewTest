@@ -99,6 +99,8 @@ public class QuaintImageViewerActivity extends Activity {
 				return createBrightnessContrastDialog();
 			case DIALOG_GAMMA:
 				return createGammaDialog();
+			case DIALOG_COLOR_BALANCE:
+				return createColorBalanceDialog();
 			default:
 				return super.onCreateDialog(id);
 		}
@@ -120,6 +122,10 @@ public class QuaintImageViewerActivity extends Activity {
 				((GammaDialog)dialog).reset();
 				((GammaDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
 				break;
+			case DIALOG_COLOR_BALANCE:
+				((ColorBalanceDialog)dialog).reset();
+				((ColorBalanceDialog)dialog).setBitmapForPreview(imageViewModel.getImageBitmap());
+				break;
 		}
 	}
 
@@ -134,6 +140,10 @@ public class QuaintImageViewerActivity extends Activity {
 	
 	private Dialog createGammaDialog() {
 		return new GammaDialog(this, new ImageGammaChanger(this, imageViewModel));
+	}
+	
+	private Dialog createColorBalanceDialog() {
+		return new ColorBalanceDialog(this, new ImageColorBalanceChanger(this, imageViewModel));
 	}
 	
 	@Override
@@ -163,6 +173,9 @@ public class QuaintImageViewerActivity extends Activity {
 				return true;
 			case R.id.menu_gamma:
 				showDialog(DIALOG_GAMMA);
+				return true;
+			case R.id.menu_color_balance:
+				showDialog(DIALOG_COLOR_BALANCE);
 				return true;
 			case R.id.menu_settings:
 				showSettings();

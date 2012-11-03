@@ -39,8 +39,8 @@
     <string name="save_as_title">save as...</string>
     <string name="brightness_contrast_text">brightness and contrast</string>
     <string name="menu_brightness_contrast_text">brightness and contrast</string>
-    <string name="brightness_contrast_title">brightness and contrast</string>
-    <string name="gamma_title">gamma</string>
+    <string name="dialog_brightness_contrast_title">brightness and contrast</string>
+    <string name="dialog_gamma_title">gamma</string>
     <string name="open_large_image_text">You do not have enough memory to open this image in its full size. Please resize (below) before opening this image.</string>
     <string name="open_large_image_title">Cannot open large image</string>
     <string name="menu_gama_text">gamma</string>
@@ -57,5 +57,7 @@
     <string name="pref_max_zoom_summary">set the maximum zoom (proportional to image)</string>
     <string name="pref_min_zoom_summary">set the minimum zoom (proportional to image)</string>
     <string name="pref_not_greater_than_zero_error">Error: Value must be greater than zero.</string>
+    <string name="dialog_color_balance_title">color balance</string>
+    <string name="menu_color_balance_text">color balance</string>
 
 </resources>
