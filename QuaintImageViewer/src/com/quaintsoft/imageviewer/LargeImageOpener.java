@@ -28,7 +28,7 @@ public class LargeImageOpener {
 	public Bitmap openImage(Uri uri) {
 		Bitmap bmp = null;
 		boolean outOfMemory = true;
-		int sampleSize = 2;		
+		int sampleSize = 2;	
 
 		while (outOfMemory && sampleSize <= maxSampleSize) {
 			try {
@@ -37,7 +37,7 @@ public class LargeImageOpener {
 			} catch (OutOfMemoryError e) {
 				sampleSize++;
 			} catch (Exception e) {
-				break;
+				return null;
 			}
 		}
 		
