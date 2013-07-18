@@ -1,25 +1,11 @@
 package com.quaintsoft.imageviewer.color;
 
-public class BrightnessContrast extends BitmapColorChangerByPixelFunction {
+import android.graphics.ColorMatrix;
 
+public class BrightnessContrast extends BitmapColorChangerByColorFilter {
+	
 	private int brightness = 0;
 	private int contrast = 0;
-	
-	public int pixelFunction(int i) {
-		if (contrast > 0)
-			return clamp(clamp((i - contrast) * 255.0f / (255 - 2 * contrast)) + brightness);
-		else
-			return clamp(clamp(i * (255 + 2 * contrast) / 255.0f - contrast) + brightness);
-	}
-	
-	private int clamp(float x) {
-		if (x > 255)
-			return 255;
-		else if (x < 0)
-			return 0;
-		else
-			return (int)x;
-	}
 	
 	public void setBrightness(int brightness) {
 		this.brightness = brightness;
@@ -28,5 +14,17 @@ public class BrightnessContrast extends BitmapColorChangerByPixelFunction {
 	public void setContrast(int contrast) {
 		this.contrast = contrast;
 	}
-
+	
+	@Override
+	protected ColorMatrix createColorMatrix() {
+		float scale = (1f + contrast / 127f);
+		float shift = brightness - contrast;
+		float[] colorMatrix = {
+			scale,  0f,    0f,    0f, shift,
+			0f,     scale, 0f,    0f, shift,
+			0f,     0f,    scale, 0f, shift,
+			0f,     0f,    0f,    1f, 0f };
+		return new ColorMatrix(colorMatrix);
+	}
+	
 }

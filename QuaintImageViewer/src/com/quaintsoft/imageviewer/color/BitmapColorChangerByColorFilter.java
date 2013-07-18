@@ -2,24 +2,27 @@ package com.quaintsoft.imageviewer.color;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
 public abstract class BitmapColorChangerByColorFilter
-	implements BitmapColorChanger, ColorFilter {
+	implements BitmapColorChanger {
 	
 	public void apply(Bitmap bmp) {
-		if (bmp == null || !bmp.isMutable())
-			return;
-		
-		Canvas canvas = new Canvas(bmp);
-		canvas.drawBitmap(bmp, new Matrix(), createPaint());
+		if (bmp != null && bmp.isMutable()) {
+			Canvas canvas = new Canvas(bmp);
+			canvas.drawBitmap(bmp, 0, 0, createPaint());
+		}
 	}
 	
-	private Paint createPaint() {
+	protected Paint createPaint() {
 		Paint paint = new Paint();
-		paint.setColorFilter(colorFilter());
+		paint.setColorFilter(new ColorMatrixColorFilter(createColorMatrix()));
 		return paint;
 	}
+	
+	protected abstract ColorMatrix createColorMatrix();
 
 }

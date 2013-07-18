@@ -10,7 +10,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.quaintsoft.imageviewer.color.BitmapColorChangerByColorFilter;
+import com.quaintsoft.imageviewer.color.BitmapColorChanger;
 import com.quaintsoft.imageviewer.color.Grayscale;
 import com.quaintsoft.imageviewer.color.InvertColors;
 import com.quaintsoft.imageviewer.preference.FitPreferenceApplier;
@@ -212,7 +211,7 @@ public class QuaintImageViewerActivity extends Activity {
 		startActivityForResult(openImageIntent, OPEN_REQUEST_CODE);
 	}
 	
-	private void changeColors(BitmapColorChangerByColorFilter colorChanger) {
+	private void changeColors(BitmapColorChanger colorChanger) {
 		Bitmap bmp = imageViewModel.getImageBitmap();
 		colorChanger.apply(bmp);
 		imageViewModel.invalidate();
@@ -228,7 +227,10 @@ public class QuaintImageViewerActivity extends Activity {
 		switch (requestCode) {
 			case OPEN_REQUEST_CODE:
 				if (resultCode == RESULT_OK)
+				{
+					imageViewModel.setImageURI(null);
 					openImage(data.getData());
+				}
 				break;
 			}
 	}
